@@ -1,0 +1,12 @@
+{% extends "rango/base.html" %}
+{% load static %}
+
+{% block title %}Welcome to Rango{% endblock %}
+
+{% block content %}
+    <h1>Welcome to Rango!</h1>
+    <p>{{ message }}</p>
+    <p>Click <a href="{% url 'about' %}">here</a> to learn more about Rango.</p>
+
+    <img src="{% static 'rango/images/rango.jpg' %}" alt="Rango Logo">
+{% endblock %}
