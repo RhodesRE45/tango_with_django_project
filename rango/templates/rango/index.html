@@ -6,7 +6,13 @@
 {% block content %}
     <h1>Welcome to Rango!</h1>
     <p>{{ message }}</p>
-    <p>Click <a href="{% url 'about' %}">here</a> to learn more about Rango.</p>
 
-    <img src="{% static 'rango/images/rango.jpg' %}" alt="Rango Logo">
+    <h2>Popular Categories</h2>
+    <ul>
+        {% for category in categories %}
+            <li><a href="{% url 'show_category' category.name %}">{{ category.name }}</a></li>
+        {% empty %}
+            <li>No categories available.</li>
+        {% endfor %}
+    </ul>
 {% endblock %}

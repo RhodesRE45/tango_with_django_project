@@ -1,0 +1,15 @@
+{% extends "rango/base.html" %}
+{% block title %}{{ category.name }}{% endblock %}
+
+{% block content %}
+    <h1>{{ category.name }}</h1>
+
+    <h2>Pages in this Category</h2>
+    <ul>
+        {% for page in pages %}
+            <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+        {% empty %}
+            <li>No pages in this category.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
