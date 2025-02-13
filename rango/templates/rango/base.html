@@ -9,8 +9,9 @@
 </head>
 <body>
     <div class="navbar">
-        <a href="{% url 'index' %}">Home</a> |
-        <a href="{% url 'about' %}">About</a>
+        <a href="{% url 'rango:index' %}">Home</a> |
+        <a href="{% url 'rango:about' %}">About</a> |
+        <a href="{% url 'rango:add_category' %}">Add Category</a>
     </div>
 
     <div class="container">
@@ -19,3 +20,4 @@
     </div>
 </body>
 </html>
+

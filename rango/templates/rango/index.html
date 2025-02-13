@@ -5,14 +5,19 @@
 
 {% block content %}
     <h1>Welcome to Rango!</h1>
-    <p>{{ message }}</p>
+    <p>Rango says... <strong>Welcome to the best tutorial on the planet!</strong></p>
 
-    <h2>Popular Categories</h2>
+    <a href="{% url 'rango:add_category' %}">Add a New Category</a><br />
+
+    <h2>Most Liked Categories</h2>
     <ul>
         {% for category in categories %}
-            <li><a href="{% url 'show_category' category.name %}">{{ category.name }}</a></li>
+            <li><a href="{% url 'rango:show_category' category.slug %}">{{ category.name }}</a></li>
         {% empty %}
             <li>No categories available.</li>
         {% endfor %}
     </ul>
+
+    <h2>Rango Logo</h2>
+    <img src="{% static 'rango/images/rango.jpg' %}" alt="Rango Logo" style="width:200px; height:auto;">
 {% endblock %}
