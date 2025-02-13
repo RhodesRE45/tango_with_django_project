@@ -1,9 +1,9 @@
 {% extends "rango/base.html" %}
 {% load static %}
 
-{% block title %}Welcome to Rango{% endblock %}
+{% block title_block %}Welcome to Rango{% endblock %}
 
-{% block content %}
+{% block body_block %}
     <h1>Welcome to Rango!</h1>
     <p>Rango says... <strong>Welcome to the best tutorial on the planet!</strong></p>
 
@@ -15,6 +15,15 @@
             <li><a href="{% url 'rango:show_category' category.slug %}">{{ category.name }}</a></li>
         {% empty %}
             <li>No categories available.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Most Viewed Pages</h2>
+    <ul>
+        {% for page in most_viewed_pages %}
+            <li><a href="{{ page.url }}">{{ page.title }}</a> ({{ page.views }} views)</li>
+        {% empty %}
+            <li>No pages available.</li>
         {% endfor %}
     </ul>
 

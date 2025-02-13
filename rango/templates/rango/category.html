@@ -1,15 +1,18 @@
 {% extends "rango/base.html" %}
-{% block title %}{{ category.name }}{% endblock %}
+{% block title_block %}{{ category.name }}{% endblock %}
 
-{% block content %}
+{% block body_block %}
     <h1>{{ category.name }}</h1>
 
     <h2>Pages in this Category</h2>
     <ul>
         {% for page in pages %}
-            <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+            <li><a href="{{ page.url }}">{{ page.title }}</a> ({{ page.views }} views)</li>
         {% empty %}
             <li>No pages in this category.</li>
         {% endfor %}
     </ul>
+
+    <h3>Add a New Page:</h3>
+    <a href="{% url 'rango:add_page' category.slug %}">Click here to add a new page</a>
 {% endblock %}

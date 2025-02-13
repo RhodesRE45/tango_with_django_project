@@ -5,7 +5,13 @@ from rango.forms import CategoryForm, PageForm
 
 def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
-    context_dict = {'categories': category_list}
+    most_viewed_pages = Page.objects.order_by('-views')[:5]
+
+    context_dict = {
+        'categories': category_list,
+        'most_viewed_pages': most_viewed_pages,
+    }
+
     return render(request, 'rango/index.html', context=context_dict)
 
 def about(request):
@@ -13,8 +19,13 @@ def about(request):
 
 def show_category(request, category_name_slug):
     category = get_object_or_404(Category, slug=category_name_slug)
-    pages = Page.objects.filter(category=category)
-    context_dict = {'category': category, 'pages': pages}
+    pages = Page.objects.filter(category=category).order_by('-views')
+
+    context_dict = {
+        'category': category,
+        'pages': pages,
+    }
+
     return render(request, 'rango/category.html', context=context_dict)
 
 def add_category(request):
@@ -30,21 +41,18 @@ def add_category(request):
 
     return render(request, 'rango/add_category.html', {'form': form})
 
-
 def add_page(request, category_name_slug):
-    try:
-        category = Category.objects.get(slug=category_name_slug)
-    except Category.DoesNotExist:
-        return redirect('rango:index')
-
-    form = PageForm()
+    category = get_object_or_404(Category, slug=category_name_slug)
 
     if request.method == 'POST':
         form = PageForm(request.POST)
         if form.is_valid():
             page = form.save(commit=False)
             page.category = category
+            page.slug = slugify(page.title)
             page.save()
             return redirect('rango:show_category', category_name_slug=category.slug)
+    else:
+        form = PageForm()
 
     return render(request, 'rango/add_page.html', {'form': form, 'category': category})
