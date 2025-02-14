@@ -6,10 +6,26 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
+from datetime import datetime
 
 def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
     most_viewed_pages = Page.objects.order_by('-views')[:5]
+
+    if 'visits' not in request.session:
+        request.session['visits'] = 1
+        request.session['last_visit'] = str(datetime.now())
+    else:
+        visits = request.session['visits']
+        last_visit_str = request.session.get('last_visit', str(datetime.now()))
+        last_visit_time = datetime.strptime(last_visit_str, "%Y-%m-%d %H:%M:%S.%f")
+
+        if (datetime.now() - last_visit_time).days > 0:
+            visits += 1
+            request.session['visits'] = visits
+            request.session['last_visit'] = str(datetime.now())
+
+    request.session.modified = True
 
     context_dict = {
         'categories': category_list,
@@ -20,7 +36,23 @@ def index(request):
     return render(request, 'rango/index.html', context=context_dict)
 
 def about(request):
-    return render(request, 'rango/about.html')
+    if 'visits' not in request.session:
+        request.session['visits'] = 1
+        request.session['last_visit'] = str(datetime.now())
+    else:
+        visits = request.session['visits']
+        last_visit_str = request.session.get('last_visit', str(datetime.now()))
+        last_visit_time = datetime.strptime(last_visit_str, "%Y-%m-%d %H:%M:%S.%f")
+
+        if (datetime.now() - last_visit_time).days > 0:
+            visits += 1
+            request.session['visits'] = visits
+            request.session['last_visit'] = str(datetime.now())
+
+    request.session.modified = True
+
+    return render(request, 'rango/about.html', {'visits': request.session['visits']})
+
 
 def show_category(request, category_name_slug):
     context_dict = {}
