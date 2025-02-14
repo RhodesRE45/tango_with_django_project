@@ -1,0 +1,18 @@
+{% extends 'rango/base.html' %}
+
+{% block title_block %}{{ category.name }}{% endblock %}
+
+{% block body_block %}
+<h1>{{ category.name }}</h1>
+
+<ul>
+    {% for page in pages %}
+        <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+    {% endfor %}
+</ul>
+
+{% if user.is_authenticated %}
+    <a href="{% url 'rango:add_page' category.slug %}">Add Page</a>
+{% endif %}
+
+{% endblock %}
