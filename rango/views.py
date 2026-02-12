@@ -5,8 +5,28 @@ from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from datetime import datetime
+
+def visitor_cookie_handler(request):
+    visits = int(request.session.get('visits', '1'))
+    last_visit_cookie = request.session.get('last_visit')
+    last_visit_time = datetime.now()
+
+    if last_visit_cookie:
+        last_visit_time = datetime.strptime(last_visit_cookie[:-7], '%Y-%m-%d %H:%M:%S')
+
+        if (datetime.now() - last_visit_time).days > 0:
+            visits = visits + 1
+            request.session['last_visit'] = str(datetime.now())
+    else:
+        request.session['last_visit'] = last_visit_time.strftime('%Y-%m-%d %H:%M:%S')
+    
+    request.session['visits'] = visits
 
 def index(request):
+
+    visitor_cookie_handler(request)
+
     category_list = Category.objects.order_by('-likes')[:5]
     page_list = Page.objects.order_by('-views')[:5]
 
@@ -34,7 +54,8 @@ def show_category(request, category_name_slug):
     return render(request, 'rango/category.html', context=context_dict)
 
 def about(request):
-    return render(request, 'rango/about.html')
+    visits = request.session.get('visits', 1)
+    return render(request, 'rango/about.html', {'visits': visits})
 
 @login_required
 def add_category(request):
